@@ -1,9 +1,15 @@
-import { FeatureCard } from "@/components/FeatureCard";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, HandCoins, Heart, Shield, Zap } from "lucide-react";
+"use client";
 
+import { AuthButton } from "@/components/auth/auth-button";
+import { FeatureCard } from "@/components/FeatureCard";
+import { ArrowRight, HandCoins, Heart, Shield, Zap } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function Home() {
+  const { data: session, status } = useSession();
+  console.log("Session => ", session);
+  console.log("Status => ", status);
+
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-white to-gray-50">
       <header className="container mx-auto py-6 px-4">
@@ -28,24 +34,17 @@ export default function Home() {
               </h1>
 
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Receba doações diretamente dos seus seguidores através de uma página personalizada e elegante, sem
-                complicações.
+                Receba doações diretamente dos seus seguidores através de uma
+                página personalizada e elegante, sem complicações.
               </p>
 
               <div className="pt-4">
-                <form>
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="bg-amber-500 hover:bg-amber-600 text-white font-medium px-8 h-12"
-                  >
-                    Começar agora
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </form>
+                <AuthButton className="bg-amber-500 hover:bg-amber-600 text-white font-medium px-8 h-12">
+                  Começar agora
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </AuthButton>
               </div>
             </div>
-
           </div>
 
           <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">

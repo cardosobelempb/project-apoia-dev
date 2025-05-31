@@ -1,12 +1,11 @@
+"use client";
 
 import { Users, DollarSign, Wallet } from "lucide-react";
 import { StatCard } from "./stats-card";
 
-export async function Stats() {
-
+export function Stats() {
   return (
     <div className="grid gap-6 grid-cols-1 md:grid-cols-3 mb-6">
-
       <StatCard
         title="Apoiadores"
         description="Total de apoiadores"
@@ -27,7 +26,6 @@ export async function Stats() {
         icon={<Wallet className="w-8 h-8 text-green-500" />}
         value={0}
       />
-
     </div>
   );
 }

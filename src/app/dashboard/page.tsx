@@ -1,9 +1,13 @@
+"use client";
+
 import { DonationTable } from "./_components/donates";
 import { Stats } from "./_components/analytics";
+import { useSession } from "next-auth/react";
 
-
-
-export default async function Dashboard() {
+export default function Dashboard() {
+  const { data: session, status } = useSession();
+  console.log("Session => ", session);
+  console.log("Status => ", status);
 
   return (
     <div className="p-4">
@@ -14,7 +18,6 @@ export default async function Dashboard() {
       </section>
 
       <Stats />
-
 
       <h2 className="text-2xl font-semibold mb-2">Últimas doações</h2>
       <DonationTable />
