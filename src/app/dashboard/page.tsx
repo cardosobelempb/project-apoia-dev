@@ -2,12 +2,27 @@
 
 import { DonationTable } from "./_components/donates";
 import { Stats } from "./_components/analytics";
+
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
-  console.log("Session => ", session);
+  console.log("Session => ", session?.user);
+  console.log("Session => ", session?.user.userName);
   console.log("Status => ", status);
+
+  if (status === "loading") {
+    return (
+      <>
+        <p>Process...</p>
+      </>
+    );
+  }
+
+  if (!session?.user) {
+    redirect("/");
+  }
 
   return (
     <div className="p-4">
