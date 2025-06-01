@@ -1,10 +1,8 @@
 "use client";
 
-import { DonationTable } from "./_components/donates";
+import { auth } from "@/shared/auth/auth";
 import { Stats } from "./_components/analytics";
-
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import { DonationTable } from "./_components/donates";
 
 export default function Dashboard() {
   return (

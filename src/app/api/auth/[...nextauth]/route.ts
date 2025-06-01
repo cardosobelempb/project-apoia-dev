@@ -1,19 +1,22 @@
 // route.ts
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
+import NextAuth, { NextAuthOptions } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 import GitHubProvider from "next-auth/providers/github";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compare } from "bcryptjs";
 import { prisma } from "@/shared/database/prisma";
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
     }),
-    Credentials({
+    CredentialsProvider({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
@@ -28,36 +31,44 @@ export const authOptions = {
 
         if (!user || !user.password) return null;
 
-        const valid = await compare(credentials.password, user.password);
-        if (!valid) return null;
+        const isValid = await compare(credentials.password, user.password);
+        if (!isValid) return null;
 
-        console.log("User =>", user);
+        // Retornar apenas os campos necessários para o token
         return {
           id: user.id,
-          name: user.name ?? "",
-          email: user.email,
+          name: user.name ?? undefined,
+          userName: user.userName ?? undefined,
+          email: user.email ?? undefined,
           image: user.image ?? undefined,
-          // role: user.role, // 👈 incluído
-          userName: user.userName ?? undefined, // 👈 fix: ensure type matches User
+          gender: user.gender ?? undefined,
+          bio: user.bio ?? undefined,
+          role: user.role ?? undefined,
         };
       },
     }),
   ],
-  session: {
-    strategy: "jwt" as const,
-  },
   callbacks: {
-    async jwt({ token, user }: { token: any; user?: any }) {
-      // console.log("Token =>", token);
-      // console.log("User =>", user);
-      if (user) token.id = user.id;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.userName = user.userName ?? undefined;
+        token.image = user.image;
+        token.gender = user.gender ?? undefined;
+        token.bio = user.bio ?? undefined;
+        token.role = user.role ?? undefined;
+      }
       return token;
     },
-    async session({ session, token }: { session: any; token?: any }) {
-      // console.log("Session =>", session);
-      // console.log("Token =>", token);
-      if (token && session.user) {
+    async session({ session, token }) {
+      if (session.user && token) {
         session.user.id = token.id as string;
+        session.user.userName = token.userName as string;
+        session.user.gender = token.gender as string;
+        session.user.bio = token.bio as string;
+        session.user.role = token.role as string;
       }
       return session;
     },
@@ -68,7 +79,6 @@ export const authOptions = {
   },
 };
 
-// handler deve vir depois
 const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

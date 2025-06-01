@@ -49,10 +49,6 @@ export default function SignInPage() {
     });
   }
 
-  const handleRegister = async () => {
-    await signIn("github", { callbackUrl: "/dashboard" });
-  };
-
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center">
       <Card className="w-full max-w-sm">

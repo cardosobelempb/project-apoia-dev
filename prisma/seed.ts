@@ -18,6 +18,8 @@ async function main() {
         password: await hash("hashedpassword", 12),
         userName: "alice",
         bio: "Apaixonada por tecnologia.",
+        gender: "FEMALE",
+        role: "USER",
       },
       {
         name: "Bruno Costa",
@@ -25,6 +27,8 @@ async function main() {
         password: await hash("hashedpassword", 12),
         userName: "brunoc",
         bio: "Desenvolvedor e criador de conteúdo.",
+        gender: "MALE",
+        role: "USER",
       },
       {
         name: "Carla Lima",
@@ -32,6 +36,8 @@ async function main() {
         password: await hash("hashedpassword", 12),
         userName: "carla_lima",
         bio: "Compartilhando conhecimento todos os dias.",
+        gender: "FEMALE",
+        role: "USER",
       },
     ],
   });
