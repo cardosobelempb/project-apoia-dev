@@ -31,6 +31,7 @@ export const authOptions = {
         const valid = await compare(credentials.password, user.password);
         if (!valid) return null;
 
+        console.log("User =>", user);
         return {
           id: user.id,
           name: user.name ?? "",
@@ -47,12 +48,14 @@ export const authOptions = {
   },
   callbacks: {
     async jwt({ token, user }: { token: any; user?: any }) {
+      // console.log("Token =>", token);
+      // console.log("User =>", user);
       if (user) token.id = user.id;
       return token;
     },
     async session({ session, token }: { session: any; token?: any }) {
-      console.log("Token =>", token);
-      console.log("Session =>", session);
+      // console.log("Session =>", session);
+      // console.log("Token =>", token);
       if (token && session.user) {
         session.user.id = token.id as string;
       }
@@ -61,7 +64,7 @@ export const authOptions = {
   },
   secret: process.env.AUTH_SECRET,
   pages: {
-    signIn: "/login",
+    signIn: "/signin",
   },
 };
 

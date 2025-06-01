@@ -1,18 +1,26 @@
 "use client";
-import { auth } from "@/shared/auth/auth";
+import Loading from "@/app/loading";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 
 import React from "react";
 
-export default async function AuthPrivate({
+export default function AuthPrivate({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  const { data: session, status } = useSession();
+  console.log("Session => ", session?.user);
+  console.log("Session => ", session?.user.userName);
+  console.log("Status => ", status);
 
-  if (!session) {
-    return <p>Você precisa estar autenticado.</p>;
+  if (status === "loading") {
+    return <Loading />;
+  }
+
+  if (!session?.user) {
+    redirect("/");
   }
   return <div>{children}</div>;
 }

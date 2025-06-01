@@ -1,20 +1,10 @@
 "use client";
 
-import { AuthButton } from "@/components/auth/auth-button";
 import { FeatureCard } from "@/components/FeatureCard";
-import { Button } from "@/components/ui/button";
 import { ArrowRight, HandCoins, Heart, Shield, Zap } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Home() {
-  const { data: session, status } = useSession();
-  console.log("Session => ", session?.user);
-  console.log("Status => ", status);
-
-  const handleRegister = async () => {
-    await signIn("github", { callbackUrl: "/dashboard" });
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-b from-white to-gray-50">
       <header className="container mx-auto py-6 px-4">
@@ -43,16 +33,14 @@ export default function Home() {
                 página personalizada e elegante, sem complicações.
               </p>
 
-              <div className="pt-4">
-                <form action={handleRegister}>
-                  <Button
-                    type="submit"
-                    className="bg-amber-500 hover:bg-amber-600 text-white font-medium px-8 h-12"
-                  >
-                    Começar agora
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </form>
+              <div className="flex justify-center">
+                <Link
+                  href="/signin"
+                  className="flex items-center justify-center self-center rounded bg-amber-500 hover:bg-amber-600 text-white font-medium px-8 h-12"
+                >
+                  Começar agora
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </div>
             </div>
           </div>

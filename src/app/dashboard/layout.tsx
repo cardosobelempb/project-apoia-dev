@@ -1,5 +1,6 @@
 import AuthPrivate from "@/components/auth/auth-private";
 import { Header } from "./_components/header";
+import { SessionAuthProvider } from "@/components/auth/session-auth.provider";
 
 export default function DashboardLayout({
   children,
@@ -7,9 +8,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <Header />
-      <main className="w-full max-w-7xl mx-auto">{children}</main>
-    </>
+    <SessionAuthProvider>
+      <AuthPrivate>
+        <Header />
+        <main className="w-full max-w-7xl mx-auto">{children}</main>
+      </AuthPrivate>
+    </SessionAuthProvider>
   );
 }

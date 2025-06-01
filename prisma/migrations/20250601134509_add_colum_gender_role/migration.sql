@@ -1,0 +1,9 @@
+-- CreateEnum
+CREATE TYPE "ROLES" AS ENUM ('ADMIN', 'USER', 'MASTER');
+
+-- CreateEnum
+CREATE TYPE "GENDER" AS ENUM ('MALE', 'FEMALE');
+
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "gender" "GENDER",
+ADD COLUMN     "role" "ROLES" NOT NULL DEFAULT 'USER';
