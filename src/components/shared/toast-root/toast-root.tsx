@@ -1,7 +1,5 @@
-// components/CustomToast.tsx
 "use client";
 
-import { toast, Toaster } from "sonner";
 import {
   CheckCircle,
   AlertTriangle,
@@ -10,22 +8,65 @@ import {
   LucideIcon,
 } from "lucide-react";
 import React from "react";
+import {
+  ToastContainer,
+  toast,
+  ToastOptions as ReactToastOptions,
+} from "react-toastify";
+// import { useTranslation } from "react-i18next";
+import "react-toastify/dist/ReactToastify.css";
 
-// Tipagem das opções do toast do Sonner
-type ToastOptions = Parameters<typeof toast>[1];
-
-// Tipos suportados
+// Tipos
+type ToastOptions = ReactToastOptions;
 type ToastType = "success" | "error" | "info" | "warning";
 
-// Props da função showToast
 interface ShowToastProps {
   title?: string;
   description?: string;
   type?: ToastType;
   duration?: number;
-  icon?: React.ReactNode;
+  icon?: LucideIcon;
   options?: ToastOptions;
+  i18n?: boolean; // se as strings forem chaves de tradução
 }
+
+// Cores e ícones
+const contextClass: Record<ToastType | "default", string> = {
+  success: "oklch(87.1% 0.15 154.449)",
+  error: "oklch(80.8% 0.114 19.571)",
+  warning: "oklch(90.5% 0.182 98.111)",
+  info: "oklch(80.9% 0.105 251.813)",
+  default: "oklch(80.9% 0.105 251.813)",
+};
+
+const textColors: Record<ToastType, string> = {
+  success: "oklch(72.3% 0.219 149.579)",
+  error: "oklch(63.7% 0.237 25.331)",
+  warning: "oklch(79.5% 0.184 86.047)",
+  info: "oklch(62.3% 0.214 259.815)",
+};
+
+// Componente de conteúdo com suporte a i18n
+const ToastContent = ({
+  title,
+  description,
+  i18n = false,
+}: {
+  title?: string;
+  description?: string;
+  i18n?: boolean;
+}) => {
+  // const { t } = useTranslation();
+
+  return (
+    <div>
+      {/* {title && <strong>{i18n ? t(title) : title}</strong>} */}
+      {title && <strong>{title}</strong>}
+      {/* {description && <div>{i18n ? t(description) : description}</div>} */}
+      {description && <div>{description}</div>}
+    </div>
+  );
+};
 
 // Função reutilizável
 export const showToast = ({
@@ -35,6 +76,7 @@ export const showToast = ({
   duration = 4000,
   icon,
   options = {},
+  i18n = false,
 }: ShowToastProps) => {
   const defaultIcons: Record<ToastType, LucideIcon> = {
     success: CheckCircle,
@@ -43,30 +85,13 @@ export const showToast = ({
     warning: AlertTriangle,
   };
 
-  const backgroundColors: Record<ToastType, string> = {
-    success: "oklch(87.1% 0.15 154.449)", // green-600
-    error: "oklch(80.8% 0.114 19.571)", // red-600
-    warning: "oklch(90.5% 0.182 98.111)", // yellow-400
-    info: "oklch(80.9% 0.105 251.813)", // blue-600
-  };
+  const IconComponent = icon ?? defaultIcons[type];
 
-  const textColors: Record<ToastType, string> = {
-    success: "oklch(72.3% 0.219 149.579)", // green-600
-    error: "oklch(63.7% 0.237 25.331)", // red-600
-    warning: "oklch(79.5% 0.184 86.047)", // yellow-400
-    info: "#oklch(62.3% 0.214 259.815)", // blue-600
-  };
-
-  const Icon =
-    icon ??
-    React.createElement(defaultIcons[type], { className: "text-white" });
-
-  toast(title, {
-    description,
-    icon: Icon,
-    duration,
+  toast(<ToastContent title={title} description={description} i18n={i18n} />, {
+    icon: <IconComponent className="text-white" />,
+    autoClose: duration,
     style: {
-      background: backgroundColors[type],
+      background: contextClass[type],
       color: textColors[type],
       border: "none",
     },
@@ -74,16 +99,16 @@ export const showToast = ({
   });
 };
 
-// Componente global do toast
+// Toast root
 const ToastRoot = () => {
   return (
-    <Toaster
+    <ToastContainer
       position="top-right"
       theme="light"
-      toastOptions={{
-        className: "rounded-md shadow-md",
-        descriptionClassName: "text-white",
-      }}
+      toastClassName={(context) =>
+        contextClass[context?.type || "default"] +
+        " relative flex p-1 min-h-10 rounded-md justify-between overflow-hidden cursor-pointer"
+      }
     />
   );
 };

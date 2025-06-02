@@ -1,9 +1,9 @@
+import { SessionAuthProvider } from "@/components/auth/session-auth.provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
-import { SessionAuthProvider } from "@/components/auth/session-auth.provider";
-import { Toaster } from "sonner";
-import ToastRoot from "@/components/shared/toast-root/toast-root";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionAuthProvider>
-          <ToastRoot />
+          <ToastContainer position="top-right" />
           {children}
         </SessionAuthProvider>
       </body>
