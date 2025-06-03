@@ -20,17 +20,9 @@ import { LucideLock } from "lucide-react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { formErrorHandler } from "@/shared/errors/form-error-handler";
-
-// 1. Define schema Zod
-const signinSchema = z.object({
-  email: z.string().email({ message: "Email inválido" }),
-  password: z
-    .string()
-    .min(6, { message: "A senha precisa de pelo menos 6 caracteres" }),
-});
-
-// 2. Infer type a partir do schema
-type SigninFormData = z.infer<typeof signinSchema>;
+import { SigninFormData, signinSchema } from "@/shared/schemas";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function SignInPage() {
   const {
@@ -47,12 +39,12 @@ export default function SignInPage() {
     const { email, password } = data;
 
     console.log("Login data:", data);
+    await signIn("credentials", {
+      email,
+      password,
+      callbackUrl: "/dashboard",
+    });
     toast.success("Login efetuado!");
-    // await signIn("credentials", {
-    //   email,
-    //   password,
-    //   callbackUrl: "/dashboard",
-    // });
   }
 
   return (
@@ -65,16 +57,13 @@ export default function SignInPage() {
           <CardDescription>
             Faça login com seu e-mail e senha ou entre com sua conta do GitHub.
           </CardDescription>
-          <CardAction className="flex items-center">
-            <Button variant="link">Registrar</Button>
-          </CardAction>
         </CardHeader>
 
         <form
           onSubmit={handleSubmit(onSigninSubmit, onSigninError)}
-          className="space-y-8"
+          className="space-y-3"
         >
-          <CardContent className="space-y-8">
+          <CardContent className="space-y-3">
             <Input
               defaultValue=""
               type="email"
@@ -94,7 +83,7 @@ export default function SignInPage() {
             </Button>
           </CardContent>
         </form>
-        <CardFooter className="flex-col gap-2">
+        <CardFooter className="flex-col gap-y-3">
           <AuthSigninButton
             provider="github"
             className="w-full"
@@ -102,6 +91,13 @@ export default function SignInPage() {
           >
             Entrar com GitHub
           </AuthSigninButton>
+
+          <Link
+            className="w-full py-1.5 px-3 text-center rounded-md font-bold"
+            href="/signup"
+          >
+            Registrar
+          </Link>
         </CardFooter>
       </Card>
     </div>

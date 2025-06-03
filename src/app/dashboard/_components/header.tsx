@@ -2,7 +2,7 @@ import Link from "next/link";
 import { HandCoins, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MobileMenu } from "./menu-mobile";
-import { AuthSignupButton } from "@/components/auth/auth-signup-button";
+import { AuthSignOutButton } from "@/components/auth/auth-signout-button";
 
 export function Header() {
   return (
@@ -32,9 +32,9 @@ export function Header() {
             Meu perfil
           </Link>
 
-          <AuthSignupButton className="justify-start px-0 text-red-500 hover:text-red-600 hover:bg-transparent cursor-pointer">
+          <AuthSignOutButton className="justify-start px-0 text-red-500 hover:text-red-600 hover:bg-transparent cursor-pointer">
             <LogOut className="mr-2 h-4 w-4" />
-          </AuthSignupButton>
+          </AuthSignOutButton>
         </nav>
 
         <MobileMenu />
